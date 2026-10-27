@@ -27,19 +27,52 @@ abstract class Item {
   + getCatalogueNumber() : String
 }
 
-' TODO: add boxes for Book and DVD. What differs between them — a whole class,
-'       or just the value of a loan-period field?
+class Book {
+  - loanPeriod : int
+  + Book(title : String, catalogueNumber : String)
+}
 
-' TODO: reference-only items cannot be borrowed at all. Decide how to say that
-'       in the diagram: a subclass, or an interface (e.g. "Borrowable") that
-'       only some items realize?
+class DVD {
+  - loanPeriod : int
+  + DVD(title : String, catalogueNumber : String)
+}
 
-' TODO: add Member and Librarian. What do they have in common? Add the common
-'       supertype if you think one is warranted.
+interface Borrowable {
+  + borrow() : void
+  + returnItem() : void
+}
 
-' TODO: add whatever represents a hold, and connect it to the classes that need
-'       to know about it.
+class Person {
+  - name : String
+  + getName() : String
+}
 
-' TODO: add the arrows between all of your types.
+class Member {
+  - memberNumber : String
+  - lateFee : double
+  + logIn() : void
+  + placeHold(item : Item) : void
+}
+
+class Librarian {
+  + addItem(item : Item) : void
+  + waiveFee(member : Member) : void
+}
+
+class Hold {
+  - member : Member
+  - item : Item
+  + getMember() : Member
+  + getItem() : Item
+}
+
+Item <|-- Book
+Item <|-- DVD
+Borrowable <|.. Book
+Borrowable <|.. DVD
+Person <|-- Member
+Person <|-- Librarian
+Member "1" --> "0..*" Hold : places
+Item "1" --> "0..*" Hold : held by
 
 @enduml
